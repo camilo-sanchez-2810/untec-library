@@ -1,0 +1,21 @@
+# Maven
+target/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ
+.idea/
+*.iml
+
+# Tomcat
+src/main/webapp/WEB-INF/lib/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
