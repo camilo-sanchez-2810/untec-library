@@ -21,5 +21,12 @@ public class CreateUserDTO {
 		this.accessLevel = accessLevel;
 		this.type = type;
 	}
-	
+
+	public String getName() { return name; }
+	public String getMiddleName() { return middleName; }
+	public String getSurname() { return surname; }
+	public String getSecondSurname() { return secondSurname; }
+	public String getEmail() { return email; }
+	public Integer getAccessLevel() { return accessLevel; }
+	public String getType() { return type; }
 }

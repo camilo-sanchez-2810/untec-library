@@ -31,6 +31,19 @@ public class User {
 		this.type = type;
 	}
 
+	public User(UUID id, String name, String middleName, String surname, String secondSurname, String email,
+			String password, UserType type, LocalDateTime createdAt) {
+		this.id = id;
+		this.createdAt = createdAt;
+		this.name = new PersonName("Nombre", name, 2);
+		this.middleName = (middleName != null && !middleName.isBlank()) ? new PersonName("Segundo nombre", middleName, 2) : null;
+		this.surname = new PersonName("Apellido", surname, 2);
+		this.secondSurname = (secondSurname != null && !secondSurname.isBlank()) ? new PersonName("Segundo apellido", secondSurname, 2) : null;
+		this.email = new Email("Correo Electronico", email);
+		this.password = new Password("Contraseña", password);
+		this.type = type;
+	}
+
 	public String getName() {
 		return name.getValue();
 	}
@@ -72,7 +85,7 @@ public class User {
 	}
 
 	public void changePassword(String newPassword) {
-		this.password = new Password("Contraseña", newPassword);
+		this.password = Password.fromHash(newPassword);
 	}
 
 	public void updateMiddleName(String newMiddleName) {

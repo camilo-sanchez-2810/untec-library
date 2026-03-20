@@ -12,6 +12,14 @@ public class Password {
 		this.value = value;
 	}
 
+	private Password(String hash) {
+		this.value = hash;
+	}
+
+	public static Password fromHash(String hash) {
+		return new Password(hash);
+	}
+
 	public String getValue() {
 		return value;
 	}

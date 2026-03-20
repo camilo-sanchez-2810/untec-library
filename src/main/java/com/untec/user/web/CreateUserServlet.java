@@ -1,7 +1,10 @@
 package com.untec.user.web;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
+import com.untec.shared.infrastructure.db.Database;
+import com.untec.shared.infrastructure.db.MySQLDatabase;
 import com.untec.user.application.UserService;
 import com.untec.user.application.dto.CreateUserDTO;
 import com.untec.user.domain.UserFactory;
@@ -22,9 +25,14 @@ public class CreateUserServlet extends HttpServlet {
 	
 	@Override
 	public void init() throws ServletException {
-		this.repository = new UserRepositoryImpl();
-		this.factory = new UserFactory();
-		this.service = new UserService(factory);
+		try {
+			Database database = MySQLDatabase.getInstance();
+			this.repository = new UserRepositoryImpl(database);
+			this.factory = new UserFactory();
+			this.service = new UserService(factory, repository);
+		} catch (SQLException | IOException e) {
+			throw new ServletException("Error al inicializar la conexión", e);
+		}
 	}
 	
 	@Override
@@ -50,12 +58,22 @@ public class CreateUserServlet extends HttpServlet {
 		
 		try {			
 			service.createUser(dto);
-		} catch (Exception e) {
-			request.setAttribute("error", e.getMessage());
-			request.getRequestDispatcher("/create-user.jsp").forward(request, response);
+			request.setAttribute("message", "Usuario creado exitosamente.");
+		} catch (IllegalArgumentException e) {
+			String msg = e.getMessage();
+			if (msg != null && msg.startsWith("Nombre")) request.setAttribute("errorName", msg);
+			else if (msg != null && msg.startsWith("Segundo nombre")) request.setAttribute("errorMiddleName", msg);
+			else if (msg != null && msg.startsWith("Apellido") && !msg.startsWith("Apellido materno") && !msg.startsWith("Segundo apellido")) request.setAttribute("errorSurname", msg);
+			else if (msg != null && (msg.startsWith("Segundo apellido") || msg.startsWith("Apellido materno"))) request.setAttribute("errorSecondSurname", msg);
+			else if (msg != null && msg.startsWith("Correo")) request.setAttribute("errorEmail", msg);
+			else if (msg != null && msg.startsWith("Contraseña")) request.setAttribute("errorPassword", msg);
+			else request.setAttribute("error", msg);
+			request.setAttribute("formValues", dto);
+		} catch (RuntimeException e) {
+			request.setAttribute("error", "Ha ocurrido un error, intente nuevamente.");
+			request.setAttribute("formValues", dto);
 		}
 		
-		request.setAttribute("message", "User created successfully");
 		request.getRequestDispatcher("/create-user.jsp").forward(request, response);
 	}
 }

@@ -36,6 +36,23 @@ src/main/java/com/untec/
 - MySQL 8
 - Apache Tomcat 10.1
 
+## Database Setup
+
+1. Create a MySQL database:
+```sql
+CREATE DATABASE library;
+```
+
+2. Run the schema script:
+```bash
+mysql -u root -p library < sql/library.sql
+```
+
+3. Configure the database credentials in `src/main/resources/db.properties`:
+```properties
+db.url=jdbc:mysql://localhost:3306/library
+db.username=<db_user>
+db.password=<db_password>
 ```
 
 ## Running the Application
