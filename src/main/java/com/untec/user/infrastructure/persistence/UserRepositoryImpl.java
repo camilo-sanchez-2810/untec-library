@@ -1,20 +1,27 @@
 package com.untec.user.infrastructure.persistence;
 
 import static com.untec.shared.utils.UUUIDUtils.toBytes;
-import com.untec.user.domain.UserRepository;
+import static com.untec.shared.utils.UUUIDUtils.fromBytes;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Optional;
+import java.util.UUID;
 
 import com.untec.shared.infrastructure.db.Database;
 import com.untec.user.domain.Librarian;
+import com.untec.user.domain.Status;
 import com.untec.user.domain.Student;
 import com.untec.user.domain.User;
+import com.untec.user.domain.UserRepository;
+import com.untec.user.domain.UserType;
 
 public class UserRepositoryImpl implements UserRepository {
 	private Database database;
-	
+
 	public UserRepositoryImpl(Database database) {
 		this.database = database;
 	}
@@ -67,4 +74,66 @@ public class UserRepositoryImpl implements UserRepository {
 			}
 		}
     }
+
+	@Override
+	public Optional<User> findByEmail(String email) {
+		Connection connection = database.getConnection();
+		try {
+			PreparedStatement statement = connection.prepareStatement(
+				"SELECT id, name, middle_name, surname, second_surname, email, password, type, created_at " +
+				"FROM user WHERE email = ?"
+			);
+			statement.setString(1, email);
+			ResultSet resultSet = statement.executeQuery();
+
+			if (!resultSet.next()) return Optional.empty();
+
+			UUID userId = fromBytes(resultSet.getBytes("id"));
+			String name = resultSet.getString("name");
+			String middleName = resultSet.getString("middle_name");
+			String surname = resultSet.getString("surname");
+			String secondSurname = resultSet.getString("second_surname");
+			String userEmail = resultSet.getString("email");
+			String password = resultSet.getString("password");
+			UserType type = UserType.fromType(resultSet.getString("type"));
+			Timestamp createdAt = resultSet.getTimestamp("created_at");
+
+			User user = switch (type) {
+				case STUDENT -> {
+					PreparedStatement s = connection.prepareStatement(
+						"SELECT id, status, max_loan_limit FROM student WHERE user_id = ?"
+					);
+					s.setBytes(1, toBytes(userId));
+					ResultSet sr = s.executeQuery();
+					sr.next();
+					yield new Student(
+						userId,
+						fromBytes(sr.getBytes("id")),
+						name, middleName, surname, secondSurname, userEmail, password,
+						Status.fromStatus(sr.getString("status")),
+						createdAt.toLocalDateTime()
+					);
+				}
+				case LIBRARIAN -> {
+					PreparedStatement s = connection.prepareStatement(
+						"SELECT id, access_level FROM librarian WHERE user_id = ?"
+					);
+					s.setBytes(1, toBytes(userId));
+					ResultSet lr = s.executeQuery();
+					lr.next();
+					yield new Librarian(
+						userId,
+						fromBytes(lr.getBytes("id")),
+						name, middleName, surname, secondSurname, userEmail, password,
+						lr.getInt("access_level"),
+						createdAt.toLocalDateTime()
+					);
+				}
+			};
+
+			return Optional.of(user);
+		} catch (SQLException e) {
+			throw new RuntimeException("Error al buscar usuario", e);
+		}
+	}
 }

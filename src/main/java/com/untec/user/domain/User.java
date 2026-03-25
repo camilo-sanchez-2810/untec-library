@@ -32,7 +32,7 @@ public class User {
 	}
 
 	public User(UUID id, String name, String middleName, String surname, String secondSurname, String email,
-			String password, UserType type, LocalDateTime createdAt) {
+			String password2, UserType type, LocalDateTime createdAt) {
 		this.id = id;
 		this.createdAt = createdAt;
 		this.name = new PersonName("Nombre", name, 2);
@@ -40,7 +40,7 @@ public class User {
 		this.surname = new PersonName("Apellido", surname, 2);
 		this.secondSurname = (secondSurname != null && !secondSurname.isBlank()) ? new PersonName("Segundo apellido", secondSurname, 2) : null;
 		this.email = new Email("Correo Electronico", email);
-		this.password = new Password("Contraseña", password);
+		this.password = null;
 		this.type = type;
 	}
 

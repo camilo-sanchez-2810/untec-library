@@ -1,5 +1,6 @@
 package com.untec.user.domain;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Student extends User {
@@ -13,12 +14,15 @@ public class Student extends User {
 		this.status = Status.ACTIVE;
 	}
 
-	public void suspend() {
-		this.status = Status.SUSPENDED;
+	public Student(UUID id, UUID studentId, String name, String middleName, String surname, String secondSurname,
+			String email, String password, Status status, LocalDateTime createdAt) {
+		super(id, name, middleName, surname, secondSurname, email, password, UserType.STUDENT, createdAt);
+		this.studentId = studentId;
+		this.status = status;
 	}
 
-	public void activate() {
-		this.status = Status.ACTIVE;
+	public boolean  isActive() {
+		return status == Status.ACTIVE;
 	}
 
 	public UUID getStudentId() {

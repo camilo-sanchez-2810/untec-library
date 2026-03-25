@@ -1,5 +1,6 @@
 package com.untec.user.domain;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 public class Librarian extends User {
@@ -19,6 +20,13 @@ public class Librarian extends User {
 			throw new IllegalArgumentException("El nivel de acceso no puede ser nulo");
 		if (accessLevel < 1 || accessLevel > 2)
 			throw new IllegalArgumentException("El nivel de acceso " + accessLevel + " no existe");
+		this.accessLevel = accessLevel;
+	}
+
+	public Librarian(UUID id, UUID librarianId, String name, String middleName, String surname, String secondSurname,
+			String email, String password, int accessLevel, LocalDateTime createdAt) {
+		super(id, name, middleName, surname, secondSurname, email, password, UserType.LIBRARIAN, createdAt);
+		this.librarianId = librarianId;
 		this.accessLevel = accessLevel;
 	}
 
