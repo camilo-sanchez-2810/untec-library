@@ -33,7 +33,7 @@ public class UserService {
 	public User findUserByEmail(FindUserByEmailDTO dto) {
 		if (dto == null) throw new IllegalArgumentException("No se puede  buscar un usuario nulo");
 		User user = repository.findByEmail(dto.email).orElseThrow(() -> new IllegalArgumentException("Correo electrónico inválido"));
-		
+		System.out.println("contraseña: " + user.getPassword());
 		if(!argon2.verify(user.getPassword(), dto.password)) throw new IllegalArgumentException("Contraseña inválida");
 		if(user instanceof Student student) {
 			if(!student.isActive()) throw new UserInactiveException("Estudiante no tiene acceso a esta web");

@@ -95,6 +95,7 @@ public class UserRepositoryImpl implements UserRepository {
 			String secondSurname = resultSet.getString("second_surname");
 			String userEmail = resultSet.getString("email");
 			String password = resultSet.getString("password");
+			System.out.println(password);
 			UserType type = UserType.fromType(resultSet.getString("type"));
 			Timestamp createdAt = resultSet.getTimestamp("created_at");
 

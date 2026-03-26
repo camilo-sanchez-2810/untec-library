@@ -60,16 +60,16 @@ public class LoginServlet extends HttpServlet {
 			if (msg != null && msg.startsWith("Correo")) request.setAttribute("errorEmail", msg);
 			else if (msg != null && msg.startsWith("Contraseña")) request.setAttribute("errorPassword", msg);
 			else request.setAttribute("error", msg);
-			request.setAttribute("formValue", dto);
-			request.getRequestDispatcher("/login.jsp").forward(request, response);
+			request.setAttribute("formValues", dto);
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
 		}catch (UserInactiveException e) {
 			request.setAttribute("error", e.getMessage());
-			request.setAttribute("formValue", dto);
-			request.getRequestDispatcher("/login.jsp").forward(request, response);
+			request.setAttribute("formValues", dto);
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
 		} catch (RuntimeException e) {
 			request.setAttribute("error", e.getMessage());
-			request.setAttribute("formValue", dto);
-			request.getRequestDispatcher("/login.jsp").forward(request, response);
+			request.setAttribute("formValues", dto);
+			request.getRequestDispatcher("/index.jsp").forward(request, response);
 		}
 	}
 }

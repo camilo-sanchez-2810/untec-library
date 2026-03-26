@@ -45,6 +45,7 @@
                 <div class="form-group">
                     <label for="email">Correo electrónico</label>
                     <input type="email" id="email" name="email" required placeholder="correo@ejemplo.com"
+                    		value="${formValues.email} "
                            class="<%= request.getAttribute("errorEmail") != null ? "input-error" : "" %>">
                     <c:if test="${not empty errorEmail}"><span class="field-error">${errorEmail}</span></c:if>
                 </div>
