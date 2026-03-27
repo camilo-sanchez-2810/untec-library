@@ -1,4 +1,4 @@
-package com.untec.books.domain;
+package com.untec.book.domain;
 
 public enum FileType {
 	PDF("pdf"),EPUB("epub");

@@ -1,4 +1,4 @@
-package com.untec.books.domain;
+package com.untec.book.domain;
 
 import java.util.UUID;
 
@@ -9,11 +9,13 @@ public class Book {
 	private String description;
 	private FileType fileType;
 	private String fileUrl;
-	private int languague;
+	private String language;
+	private String authors;
+	private String categories;
 	private int year;
 	
 	
-	public Book(UUID id, String title, String coverUrl, String description, FileType fileType, String fileUrl, int languague,
+	public Book(UUID id, String title, String coverUrl, String description, FileType fileType, String fileUrl, String language, String authors, String categories,
 			int year) {
 		this.id = id;
 		this.title = title;
@@ -21,8 +23,35 @@ public class Book {
 		this.description = description;
 		this.fileType = fileType;
 		this.fileUrl = fileUrl;
-		this.languague = languague;
+		this.language = language;
+		this.authors = authors;
+		this.categories = categories;
 		this.year = year;
+	}
+
+
+	public String getAuthors() {
+		return authors;
+	}
+
+
+	public void setAuthors(String authors) {
+		this.authors = authors;
+	}
+
+
+	public String getCategories() {
+		return categories;
+	}
+
+
+	public void setCategories(String categories) {
+		this.categories = categories;
+	}
+
+
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 
 
@@ -84,15 +113,9 @@ public class Book {
 	public void setFileUrl(String fileUrl) {
 		this.fileUrl = fileUrl;
 	}
-
-
-	public int getLanguague() {
-		return languague;
-	}
-
-
-	public void setLanguague(int languague) {
-		this.languague = languague;
+	
+	public String getLanguage() {
+		return language;
 	}
 
 

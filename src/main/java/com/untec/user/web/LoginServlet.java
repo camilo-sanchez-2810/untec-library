@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
 			if (user instanceof Student student) {
 				session.setAttribute("maxLoan", student.getMaxLoan());
 				session.setAttribute("studentId", student.getStudentId().toString());
-				request.getRequestDispatcher("/student/menu.jsp").forward(request, response);
+				response.sendRedirect(request.getContextPath() + "/book/home?page=1");
 			}
 		} catch (IllegalArgumentException e) {
 			String msg = e.getMessage();
